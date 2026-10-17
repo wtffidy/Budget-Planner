@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Budget Tracker</title>
+  <meta name="description" content="A simple, private budget tracker. Your data never leaves your browser.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>💰 Budget Tracker</h1>
+    <nav aria-label="Main">
+      <button data-view="dashboard">Dashboard</button>
+      <button data-view="transactions">Transactions</button>
+      <button data-view="year">Year</button>
+      <button data-view="setup">Setup</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ DASHBOARD ============ -->
+    <section id="view-dashboard" hidden>
+      <div class="toolbar">
+        <label>Month <input type="month" id="dash-month"></label>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="card">
+        <h2>Budget vs. actual</h2>
+        <div class="table-wrap"><table id="cat-table"></table></div>
+        <p class="muted" id="dash-empty" hidden>No transactions this month yet. Add some on the Transactions tab, or load demo data in Setup.</p>
+      </div>
+    </section>
+
+    <!-- ============ TRANSACTIONS ============ -->
+    <section id="view-transactions" hidden>
+      <div class="card">
+        <h2 id="tx-form-title">Add a transaction</h2>
+        <form id="tx-form" class="tx-form">
+          <label>Date <input type="date" id="tx-date" required></label>
+          <label class="grow">Description <input type="text" id="tx-desc" placeholder="e.g. Grocery run" maxlength="120"></label>
+          <label>Category <select id="tx-cat" required></select></label>
+          <label>Amount <input type="number" id="tx-amount" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></label>
+          <div class="form-actions">
+            <button type="submit" class="primary" id="tx-submit">Add</button>
+            <button type="button" id="tx-cancel" hidden>Cancel</button>
+          </div>
+        </form>
+        <p class="muted small">Always enter amounts as positive numbers. The category decides whether it counts as income, spending, or savings.</p>
+      </div>
+
+      <div class="card">
+        <div class="toolbar">
+          <label>Show <select id="tx-filter-month"></select></label>
+          <label class="grow">Search <input type="search" id="tx-search" placeholder="Filter by description or category"></label>
+        </div>
+        <div class="table-wrap"><table id="tx-table"></table></div>
+        <p class="muted" id="tx-empty" hidden>Nothing here yet.</p>
+      </div>
+    </section>
+
+    <!-- ============ YEAR ============ -->
+    <section id="view-year" hidden>
+      <div class="toolbar">
+        <label>Year <input type="number" id="year-input" min="2000" max="2100" step="1"></label>
+      </div>
+      <div class="card">
+        <h2>Income vs. spent</h2>
+        <div id="year-chart" class="chart"></div>
+        <div class="legend"><span><i class="sw sw-income"></i>Income</span><span><i class="sw sw-spent"></i>Spent</span></div>
+      </div>
+      <div class="card">
+        <div class="table-wrap"><table id="year-table"></table></div>
+      </div>
+    </section>
+
+    <!-- ============ SETUP ============ -->
+    <section id="view-setup" hidden>
+      <div class="grid2">
+        <div class="card">
+          <h2>Income sources</h2>
+          <p class="muted small">Expected monthly amount is just for reference on the dashboard.</p>
+          <div class="table-wrap"><table id="income-table"></table></div>
+          <button id="add-income">+ Add income source</button>
+        </div>
+        <div class="card">
+          <h2>Spending categories</h2>
+          <p class="muted small"><b>Expense</b> = money spent. <b>Savings</b> = money set aside (counts as saved, not spent).</p>
+          <div class="table-wrap"><table id="cat-setup-table"></table></div>
+          <button id="add-cat">+ Add category</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Preferences &amp; data</h2>
+        <div class="toolbar">
+          <label>Currency <select id="currency"></select></label>
+        </div>
+        <p class="muted small">Everything is stored in <b>this browser only</b> (localStorage). Nothing is uploaded anywhere. Export a backup now and then, and use it to move your data to another device.</p>
+        <div class="btn-row">
+          <button id="export-json">Export backup (JSON)</button>
+          <button id="import-json">Import backup…</button>
+          <button id="export-csv">Export transactions (CSV)</button>
+          <button id="load-demo">Load demo data</button>
+          <button id="reset" class="danger">Erase everything</button>
+        </div>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
